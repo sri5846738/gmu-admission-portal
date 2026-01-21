@@ -341,20 +341,6 @@ function nextWithVerification() {
 }
 
 /* ==================================================
-   DEMO CODE MODAL FUNCTIONS
-================================================== */
-function showDemoModal(title, message, code) {
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("modalMessage").textContent = message;
-    document.getElementById("demoCode").textContent = code;
-    document.getElementById("demoCodeModal").classList.add("show");
-}
-
-function closeDemoModal() {
-    document.getElementById("demoCodeModal").classList.remove("show");
-}
-
-/* ==================================================
    GOOGLE OAUTH2 FUNCTIONS
 ================================================== */
 function handleGoogleLogin(response) {
@@ -378,15 +364,34 @@ function handleGoogleLogin(response) {
         document.getElementById("googleVerified").style.display = "inline";
         document.getElementById("emailVerified").style.display = "inline";
         
-        // Show success modal
-        showDemoModal(
-            "Google Account Verified ✓",
-            "👤 Email: " + userData.email + "\n✓ Automatically verified with Google",
-            "Google OAuth"
-        );
+        // Show/hide logout button
+        document.getElementById("googleLoginContainer").style.display = "none";
+        document.getElementById("googleLogoutBtn").style.display = "block";
         
+        // Log success
         console.log("Google Login Success:", userData);
+        alert("✓ Successfully signed in with Google!\n\nEmail: " + userData.email);
     }
+}
+
+function handleGoogleLogout() {
+    // Clear Google sign-in
+    google.accounts.id.disableAutoSelect();
+    
+    // Reset form fields
+    document.getElementById("formEmail").value = "";
+    googleEmail = "";
+    emailVerified = false;
+    
+    // Reset UI
+    document.getElementById("googleVerified").style.display = "none";
+    document.getElementById("emailVerified").style.display = "none";
+    document.getElementById("googleLoginContainer").style.display = "block";
+    document.getElementById("googleLogoutBtn").style.display = "none";
+    
+    // Show confirmation
+    alert("✓ Logged out successfully!");
+    console.log("Google Logout Success");
 }
 
 function handleGoogleError() {

@@ -260,6 +260,7 @@
                                     </div>
                                     <div class="g_id_signin" data-type="standard" data-size="large" data-theme="light" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
                                 </div>
+                                <button id="googleLogoutBtn" class="btn logout-btn" onclick="handleGoogleLogout()" style="display: none; width: 100%; margin-top: 10px; background: #EA4335;">🚪 Logout Google</button>
                                 <span id="googleVerified" style="color: green; font-weight: bold; display: none;">✓ Google Account Verified</span>
                             </div>
                         </div>
@@ -535,26 +536,8 @@
             </div>
         </div>
 
-        <!-- DEMO CODE MODAL POPUP -->
-        <div id="demoCodeModal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closeDemoModal()">&times;</span>
-                <div class="modal-header">
-                    <h2 id="modalTitle">Verification Code</h2>
-                </div>
-                <div class="modal-body">
-                    <p id="modalMessage"></p>
-                    <div class="code-box">
-                        <span id="demoCode" class="code-display">000000</span>
-                        <button class="btn-copy" onclick="copyDemoCode()">📋 Copy Code</button>
-                    </div>
-                    <p class="modal-note">⚠️ This is a demo. In production, codes are sent via email/SMS.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn next-btn" onclick="closeDemoModal()">Got it, I'll enter the code</button>
-                </div>
-            </div>
-        </div>
+        <!-- DEMO CODE MODAL POPUP - REMOVED -->
+        <!-- Modal functionality removed - using backend verification instead -->
 
         <!-- FOOTER -->
         <footer class="footer">
