@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM University - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0b3c5d, #7a0f1b);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #0b3c5d;
+        }
+
+        .applications-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .applications-section h2 {
+            margin-bottom: 20px;
+            color: #0b3c5d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #ddd;
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #0b3c5d;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-submitted {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .status-reviewing {
+            background: #2196F3;
+            color: white;
+        }
+
+        .status-approved {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-rejected {
+            background: #f44336;
+            color: white;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-view {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-approve {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #999;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filters select, .filters input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #0b3c5d;
+        }
+
+        .modal-field {
+            margin-bottom: 15px;
+        }
+
+        .modal-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-field p {
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        .modal-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .error {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 GM University - Admin Dashboard</h1>
+            <p>Manage and review student applications</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>Total Applications</h3>
+                <div class="number" id="totalApps">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Submitted</h3>
+                <div class="number" id="submittedApps">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Under Review</h3>
+                <div class="number" id="reviewingApps">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Approved</h3>
+                <div class="number" id="approvedApps">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Rejected</h3>
+                <div class="number" id="rejectedApps">0</div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alertsContainer"></div>
+
+        <!-- Filters -->
+        <div class="applications-section">
+            <h2>Applications</h2>
+            
+            <div class="filters">
+                <select id="statusFilter" onchange="filterApplications()">
+                    <option value="">All Status</option>
+                    <option value="submitted">Submitted</option>
+                    <option value="reviewing">Reviewing</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                
+                <select id="programFilter" onchange="filterApplications()">
+                    <option value="">All Programs</option>
+                    <option value="UG">Undergraduate</option>
+                    <option value="PG">Postgraduate</option>
+                </select>
+                
+                <input type="text" id="searchInput" placeholder="Search by name or email..." onkeyup="filterApplications()">
+                
+                <button onclick="refreshData()" style="padding: 8px 20px; background: #0b3c5d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">
+                    🔄 Refresh
+                </button>
+            </div>
+
+            <!-- Table -->
+            <div id="tableContainer">
+                <div class="loading">Loading applications...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('viewModal')">&times;</span>
+            <h2>Application Details</h2>
+            <div id="detailsContent"></div>
+            <div class="modal-actions">
+                <button onclick="closeModal('viewModal')" style="background: #999; color: white;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update this URL to your production backend
+        const API_URL = 'http://localhost:3000/api'; // Change to your production backend URL
+        let allApplications = [];
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const response = await fetch(`${API_URL}/statistics`);
+                const stats = await response.json();
+                
+                document.getElementById('totalApps').textContent = stats.totalApplications;
+                document.getElementById('submittedApps').textContent = stats.submitted;
+                document.getElementById('reviewingApps').textContent = stats.reviewing;
+                document.getElementById('approvedApps').textContent = stats.approved;
+                document.getElementById('rejectedApps').textContent = stats.rejected;
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        // Load applications
+        async function loadApplications() {
+            try {
+                const response = await fetch(`${API_URL}/applications`);
+                allApplications = await response.json();
+                renderTable(allApplications);
+            } catch (error) {
+                showAlert('Error loading applications', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Render table
+        function renderTable(applications) {
+            const container = document.getElementById('tableContainer');
+            
+            if (applications.length === 0) {
+                container.innerHTML = '<div class="loading">No applications found</div>';
+                return;
+            }
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Program</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            applications.forEach(app => {
+                const date = new Date(app.createdAt).toLocaleDateString();
+                const statusClass = `status-${app.status}`;
+                
+                html += `
+                    <tr>
+                        <td>${app.studentName}</td>
+                        <td>${app.email}</td>
+                        <td>${app.programType}</td>
+                        <td>${app.selectedCourse}</td>
+                        <td><span class="status-badge ${statusClass}">${app.status}</span></td>
+                        <td>${date}</td>
+                        <td>
+                            <button class="action-btn btn-view" onclick="viewDetails('${app._id}')">View</button>
+                            <button class="action-btn btn-approve" onclick="updateStatus('${app._id}', 'approved')">Approve</button>
+                            <button class="action-btn btn-reject" onclick="updateStatus('${app._id}', 'rejected')">Reject</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Filter applications
+        function filterApplications() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const programFilter = document.getElementById('programFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = allApplications.filter(app => {
+                const matchStatus = !statusFilter || app.status === statusFilter;
+                const matchProgram = !programFilter || app.programType === programFilter;
+                const matchSearch = !searchInput || 
+                    app.studentName.toLowerCase().includes(searchInput) ||
+                    app.email.toLowerCase().includes(searchInput);
+                
+                return matchStatus && matchProgram && matchSearch;
+            });
+
+            renderTable(filtered);
+        }
+
+        // View details
+        async function viewDetails(id) {
+            try {
+                const response = await fetch(`${API_URL}/applications/${id}`);
+                const app = await response.json();
+                
+                const html = `
+                    <div class="modal-field">
+                        <label>Student Name:</label>
+                        <p>${app.studentName}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Email:</label>
+                        <p>${app.email}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Mobile:</label>
+                        <p>${app.mobile}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Father Name:</label>
+                        <p>${app.fatherName}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Mother Name:</label>
+                        <p>${app.motherName}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Program:</label>
+                        <p>${app.programType}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Course:</label>
+                        <p>${app.selectedCourse}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Present Address:</label>
+                        <p>${app.presentAddress}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Permanent Address:</label>
+                        <p>${app.permanentAddress}</p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Status:</label>
+                        <p><span class="status-badge status-${app.status}">${app.status}</span></p>
+                    </div>
+                    <div class="modal-field">
+                        <label>Submitted:</label>
+                        <p>${new Date(app.createdAt).toLocaleString()}</p>
+                    </div>
+                `;
+                
+                document.getElementById('detailsContent').innerHTML = html;
+                document.getElementById('viewModal').style.display = 'block';
+            } catch (error) {
+                showAlert('Error loading details', 'error');
+            }
+        }
+
+        // Update status
+        async function updateStatus(id, newStatus) {
+            try {
+                const response = await fetch(`${API_URL}/applications/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                if (response.ok) {
+                    showAlert(`Application ${newStatus} successfully`, 'success');
+                    loadApplications();
+                    loadStatistics();
+                }
+            } catch (error) {
+                showAlert('Error updating application', 'error');
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadApplications();
+            loadStatistics();
+            showAlert('Data refreshed', 'success');
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const container = document.getElementById('alertsContainer');
+            const alertClass = type === 'success' ? 'success' : 'error';
+            const alertHTML = `<div class="${alertClass}">${message}</div>`;
+            container.innerHTML = alertHTML;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStatistics();
+            loadApplications();
+            setInterval(() => {
+                loadStatistics();
+                loadApplications();
+            }, 30000); // Refresh every 30 seconds
+        });
+    </script>
+</body>
+</html>

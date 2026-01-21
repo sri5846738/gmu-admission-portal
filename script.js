@@ -98,12 +98,83 @@ function fillReview() {
 
 
 /* ==================================================
-   FINAL SUBMIT
+   FINAL SUBMIT - SEND TO BACKEND
 ================================================== */
-function finalSubmit() {
-    form.style.display = "none";
-    if (progressBar) progressBar.style.width = "100%";
-    successBox.style.display = "block";
+// Backend API URL - Update this based on your deployment
+const BACKEND_URL = 'http://localhost:3000/api'; // Change to your production backend URL
+
+async function finalSubmit() {
+    // Show loading state
+    const submitBtn = event.target.closest('button');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+    }
+
+    try {
+        // Collect all form data
+        const formData = {
+            // Step 1: Student Details
+            studentName: document.getElementById("studentName").value,
+            email: document.getElementById("email").value,
+            mobile: document.getElementById("mobile").value,
+            
+            // Step 2: Parent Details & Course
+            fatherName: document.getElementById("fatherName").value,
+            motherName: document.getElementById("motherName").value,
+            programType: document.getElementById("programType").value,
+            selectedCourse: document.getElementById("selectedCourse").value,
+            
+            // Step 3: Address
+            presentAddress: document.getElementById("presentAddress").value,
+            permanentAddress: document.getElementById("permanentAddress").value,
+            
+            // Verification status
+            emailVerified: window.emailVerified || false,
+            phoneVerified: window.phoneVerified || false
+        };
+
+        // Send to backend
+        const response = await fetch(`${BACKEND_URL}/applications/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ formData })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Success!
+            form.style.display = "none";
+            if (progressBar) progressBar.style.width = "100%";
+            successBox.style.display = "block";
+            
+            // Display success message with application ID
+            successBox.innerHTML = `
+                <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border-radius: 10px;">
+                    <h2>✅ Application Submitted Successfully!</h2>
+                    <p style="font-size: 16px; margin: 15px 0;">Your application has been received and stored.</p>
+                    <p style="font-size: 18px; margin: 15px 0;"><strong>Application ID:</strong> <code style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">${result.applicationId}</code></p>
+                    <p style="font-size: 14px; margin: 15px 0;">Our admissions team will review your application shortly.</p>
+                    <p style="font-size: 12px; margin-top: 20px; opacity: 0.9;">You will receive email updates on your application status.</p>
+                </div>
+            `;
+        } else {
+            // Error from backend
+            throw new Error(result.error || 'Server error');
+        }
+    } catch (error) {
+        console.error('Submission error:', error);
+        alert(`❌ Submission Failed:\n\n${error.message}\n\nPlease check your internet connection and try again.`);
+        
+        // Re-enable submit button
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Application';
+        }
+    }
 }
 
 
