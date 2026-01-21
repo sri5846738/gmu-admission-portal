@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM University Davangere | Admission Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <!-- TOP NAVBAR -->
+    <header class="topbar">
+        <!-- TOP DASHBOARD NAVBAR -->
+        <div class="top-navbar">
+            <nav>
+
+                <img src="logooo.jpg" alt="GMIT Logo" class="logo-img">
+                <span class="nav-title">GM University Davangere</span>
+
+                <a class="active" onclick="showPage('overview', event)">Overview</a>
+                <a onclick="showPage('programs', event)">Academics</a>
+                <a onclick="showPage('process', event)">Placements</a>
+                <a onclick="showPage('programs', event)">Programs</a>
+                <a onclick="showPage('process', event)">Admissions</a>
+                <a onclick="showPage('contact', event)">ERP ONLINE PAYMENT</a>
+                <a onclick="showPage('faq', event)">FAQs</a>
+                <a onclick="showPage('contact', event)">Contact</a>
+                <button class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main with-topbar">
+
+        <!-- OVERVIEW (PARALLAX READY) -->
+        <div id="overview" class="page active parallax">
+            <div class="hero">
+                <h1>GM University, Davangere</h1>
+                <p>Admissions Open | Skill Based & Industry Oriented Education</p>
+                <p>📞 8192233345 | ✉ info@gmu.ac.in</p>
+            </div>
+
+            <div class="card">
+                <h3>🎓 About GM University</h3>
+                <p>
+                    The primary goal of higher education is to develop quality human resources
+                    to contribute to scientific, technological, healthcare, economic and social
+                    development and to mould students into responsible global citizens.
+                </p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Why GMU?</h3>
+                    <p>NAAC-aligned curriculum & industry exposure.</p>
+                </div>
+                <div class="card">
+                    <h3>💼 Placements</h3>
+                    <p>90% placement support with top recruiters.</p>
+                </div>
+                <div class="card">
+                    <h3>🏫 Campus</h3>
+                    <p>57-acre green campus with hostels & labs.</p>
+                </div>
+                <div class="card">
+                    <h3>🤝 Industry Tie-ups</h3>
+                    <p>Internships, live projects & mentoring.</p>
+                </div>
+                <div class="card">
+                    <h3>🔬 Research</h3>
+                    <p>Innovation labs and funded research centres.</p>
+                </div>
+                <div class="card">
+                    <h3>🌱 Student Growth</h3>
+                    <p>Clubs, sports & leadership programs.</p>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <h2>50+</h2>
+                    <p>Programs</p>
+                </div>
+                <div class="stat">
+                    <h2>5000+</h2>
+                    <p>Students</p>
+                </div>
+                <div class="stat">
+                    <h2>300+</h2>
+                    <p>Faculty</p>
+                </div>
+                <div class="stat">
+                    <h2>100+</h2>
+                    <p>Industry Tie-ups</p>
+                </div>
+                <div class="stat">
+                    <h2>25+</h2>
+                    <p>Research Centers</p>
+                </div>
+                <div class="stat">
+                    <h2>90%</h2>
+                    <p>Placement Support</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRAMS -->
+        <div id="programs" class="page">
+            <div class="hero">
+                <h1>Academic Programs</h1>
+            </div>
+            <div class="search-box">
+                <input type="text" id="programSearch" placeholder="🔍 Search programs..." onkeyup="searchPrograms()">
+            </div>
+            <div class="grid" id="programsGrid">
+                <div class="card">
+                    <h3>UG Programs</h3>
+                    <ul>
+                        <li>BCA</li>
+                        <li>BSc (PCMB, PCMC, CS, Biotech)</li>
+                        <li>BCom</li>
+                        <li>BBA</li>
+                        <li>B.Tech (CSE, ISE, DS, ME, CE, EEE, ECE)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>PG Programs</h3>
+                    <ul>
+                        <li>MCA (AI, DS, Cyber Security)</li>
+                        <li>MBA (HR, Finance, Marketing)</li>
+                        <li>MSc</li>
+                        <li>MCom</li>
+                        <li>M.Tech</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMAIL VERIFICATION -->
+        <div id="emailVerification" class="page">
+            <div class="hero">
+                <h1>Email Verification</h1>
+                <p>Verify your email to secure your account</p>
+            </div>
+            <div class="form-box glass-card" style="max-width: 500px;">
+                <div id="verificationForm">
+                    <div class="field">
+                        <label>Enter Email Address</label>
+                        <input type="email" id="verifyEmail" placeholder="your@email.com" required>
+                    </div>
+                    <button type="button" class="btn next-btn" onclick="sendVerificationCode()" style="width: 100%; margin-top: 20px;">Send Verification Code</button>
+                </div>
+                <div id="codeVerificationForm" style="display: none;">
+                    <p style="text-align: center; margin-bottom: 20px;">✉️ A 6-digit code has been sent to your email</p>
+                    <div class="field">
+                        <label>Enter Verification Code</label>
+                        <input type="text" id="verificationCode" placeholder="000000" maxlength="6" pattern="[0-9]{6}">
+                    </div>
+                    <button type="button" class="btn submit-btn" onclick="verifyCode()" style="width: 100%; margin-top: 20px;">Verify Code</button>
+                    <button type="button" class="btn back-btn" onclick="resetVerification()" style="width: 100%; margin-top: 10px;">Back</button>
+                </div>
+                <div id="verificationSuccess" style="display: none; text-align: center;">
+                    <div class="success-icon">✔</div>
+                    <h2>Email Verified!</h2>
+                    <p>Your email has been successfully verified.</p>
+                    <button type="button" class="btn next-btn" onclick="showPage('overview', event)" style="margin-top: 20px;">Return to Home</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ***********CODES STARTS FROM HERE ******************8 -->
+        <!-- PROCESS -->
+        <div id="process" class="page">
+            <div class="hero">
+                <h1>Admission Process</h1>
+            </div>
+
+            <div class="step" data-step="1">
+                <h3>📝 Apply Online</h3>
+                <p>Fill enquiry form & upload documents</p>
+            </div>
+            <div class="step" data-step="2">
+                <h3>✅ Verification</h3>
+                <p>Documents & eligibility check</p>
+            </div>
+            <div class="step" data-step="3">
+                <h3>🎓 Counselling</h3>
+                <p>Program & fee discussion</p>
+            </div>
+            <div class="step" data-step="4">
+                <h3>💳 Fee Payment</h3>
+                <p>Confirm your admission</p>
+            </div>
+            <div class="process-apply-btn">
+                <button onclick="showPage('apply', event)" class="apply-cta">
+                    Apply Now →
+                </button>
+            </div>
+        </div>
+
+
+        <!-- APPLY HERE -->
+        <!-- APPLY -->
+        <div id="apply" class="page">
+
+            <!-- HERO -->
+            <div class="hero apply-hero">
+                <h1>Admission Enquiry Form</h1>
+                <p>Apply online with a simple and secure process</p>
+            </div>
+
+            <!-- FORM CONTAINER -->
+            <div class="form-box glass-card">
+
+                <!-- PROGRESS BAR -->
+                <div class="progress-wrap">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <form method="POST" id="admissionForm">
+                    <!-- STEP 1 -->
+                    <div class="form-step active fade-step">
+                        <h2>Student Details</h2>
+
+                        <div class="field">
+                            <label>Student Full Name</label>
+                            <input type="text" name="studentName" required placeholder="Enter full name">
+                        </div>
+
+                        <div class="field">
+                            <label>Email ID</label>
+                            <div class="email-verify-section">
+                                <div class="email-input-group">
+                                    <div class="input-with-verify">
+                                        <input type="email" id="formEmail" name="email" required placeholder="example@email.com"
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                            oninvalid="this.setCustomValidity('Enter a valid email address')"
+                                            oninput="this.setCustomValidity('')">
+                                        <button type="button" class="btn-verify" onclick="verifyEmailStep1()">Verify</button>
+                                    </div>
+                                    <div id="emailVerifyContainer" style="display: none; margin-top: 10px;">
+                                        <input type="text" id="emailCode" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}">
+                                        <button type="button" class="btn-verify-confirm" onclick="confirmEmailCode()">Confirm</button>
+                                        <span id="emailVerifyStatus"></span>
+                                    </div>
+                                    <span id="emailVerified" style="color: green; font-weight: bold; display: none;">✓ Email Verified</span>
+                                </div>
+                                
+                                <div class="divider-or">
+                                    <span>OR</span>
+                                </div>
+                                
+                                <div id="googleLoginContainer">
+                                    <div id="g_id_onload"
+                                         data-client_id="237078816504-072vcar9p6gg4p8igemv8hh9ath3dngk.apps.googleusercontent.com"
+                                         data-callback="handleGoogleLogin"
+                                         data-auto_prompt="false">
+                                    </div>
+                                    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="light" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                                </div>
+                                <span id="googleVerified" style="color: green; font-weight: bold; display: none;">✓ Google Account Verified</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label>Mobile Number</label>
+                            <div class="input-with-verify">
+                                <input type="tel" id="formMobile" name="mobile" pattern="[0-9]{10}" required placeholder="10-digit number">
+                                <button type="button" class="btn-verify" onclick="verifyPhoneStep1()">Verify</button>
+                            </div>
+                            <div id="phoneVerifyContainer" style="display: none; margin-top: 10px;">
+                                <input type="text" id="phoneCode" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}">
+                                <button type="button" class="btn-verify-confirm" onclick="confirmPhoneCode()">Confirm</button>
+                                <span id="phoneVerifyStatus"></span>
+                            </div>
+                            <span id="phoneVerified" style="color: green; font-weight: bold; display: none;">✓ Phone Verified</span>
+                        </div>
+
+                        <button type="button" class="btn next-btn" onclick="nextWithVerification()">Next →</button>
+                    </div>
+
+
+                    <!-- STEP 2 -->
+                    <div class="form-step fade-step">
+                        <h2>Parent & Course Details</h2>
+
+                        <div class="field">
+                            <label>Father Name</label>
+                            <input type="text" name="fatherName" required>
+                        </div>
+                        <div class="field">
+                            <label>Mother Name</label>
+                            <input type="text" name="motherName" required>
+                        </div>
+                        <div class="field program-box">
+
+                            <label>Program Type</label>
+
+                            <!-- RADIO INPUTS MUST BE FIRST -->
+                            <input type="radio" id="ug" name="programType" required>
+                            <input type="radio" id="pg" name="programType">
+
+                            <!-- BUTTON UI -->
+                            <div class="radio-group">
+                                <label for="ug" class="radio-card">UG</label>
+                                <label for="pg" class="radio-card">PG</label>
+                            </div>
+
+                            <!-- UG DROPDOWN -->
+                            <div class="course-box ug-courses">
+                                <select name="ugCourse">
+                                    <option value="">Select UG Program</option>
+                                    <option>BCA</option>
+                                    <option>BSc (PCMB)</option>
+                                    <option>BSc (PCMC)</option>
+                                    <option>BSc (Computer Science)</option>
+                                    <option>BSc (Biotechnology)</option>
+                                    <option>BCom</option>
+                                    <option>BBA</option>
+                                    <option>B.Tech (CSE)</option>
+                                    <option>B.Tech (ISE)</option>
+                                    <option>B.Tech (Data Science)</option>
+                                    <option>B.Tech (Mechanical)</option>
+                                    <option>B.Tech (Civil)</option>
+                                    <option>B.Tech (EEE)</option>
+                                    <option>B.Tech (ECE)</option>
+                                </select>
+                            </div>
+
+                            <!-- PG DROPDOWN -->
+                            <div class="course-box pg-courses">
+                                <select name="pgCourse">
+                                    <option value="">Select PG Program</option>
+                                    <option>MCA (AI)</option>
+                                    <option>MCA (Data Science)</option>
+                                    <option>MCA (Cyber Security)</option>
+                                    <option>MBA (HR)</option>
+                                    <option>MBA (Finance)</option>
+                                    <option>MBA (Marketing)</option>
+                                    <option>MSc</option>
+                                    <option>MCom</option>
+                                    <option>M.Tech</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn back-btn" onclick="back()">← Back</button>
+                            <button type="button" class="btn next-btn" onclick="next()">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="form-step fade-step">
+                        <h2>Address & Documents</h2>
+                        <div class="field">
+                            <label>Present Address</label>
+                            <textarea name="presentAddress" required placeholder="Enter Present address"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label>Permanent Address</label>
+                            <textarea name="permanentAddress" required placeholder="Enter Permanent address"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label>Upload 10th Marks Card</label>
+                            <input type="file" id="file10" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Upload PUC Marks Card</label>
+                            <input type="file" id="file11" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Upload Degree Marks Card</label>
+                            <input type="file" id="file12" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Upload Adhar Card</label>
+                            <input type="file" id="file13" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Upload Transfer Certificate</label>
+                            <input type="file" id="file14" required>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn back-btn" onclick="back()">← Back</button>
+                            <button type="button" class="btn next-btn" onclick="next()">Review →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 : REVIEW DETAILS -->
+                    <div class="form-step fade-step">
+                        <h2>Review Your Application</h2>
+
+                        <div class="review-box">
+                            <h2>----------------------------Student Details---------------------
+                            </h2>
+                            <p><strong>Student Name:</strong>
+                                <span id="r_name" contenteditable="true"></span>
+                            </p>
+                            <p><strong>Email ID:</strong>
+                                <span id="r_email" contenteditable="true"></span>
+                            </p>
+                            <p><strong>Mobile Number:</strong>
+                                <span id="r_mobile" contenteditable="true"></span>
+                            </p>
+                            <h2>----------------------------Parent & Course Details--------------
+                            </h2>
+                            <p><strong>Father Name:</strong>
+                                <span id="r_father" contenteditable="true"></span>
+                            </p>
+                            <p><strong>Mother Name:</strong>
+                                <span id="r_mother" contenteditable="true"></span>
+                            </p>
+                            <p><strong>Program Type:</strong> <span id="r_programType"></span></p>
+                            <p><strong>Selected Course:</strong> <span id="r_course"></span></p>
+
+                            <h2>----------------------------Address & Documents-----------------
+                            </h2>
+
+                            <h3>Address</h3>
+                            <p><strong>Present Address:</strong> <span id="r_presentAddress"></span></p>
+                            <p><strong>Permanent Address:</strong> <span id="r_permanentAddress"></span></p>
+
+                            <h3>Uploaded Documents</h3>
+                            <p><strong>10th Marks Card:</strong>
+                                <span id="r_file10"></span>
+                            </p>
+                            <p><strong>PUC Marks Card:</strong>
+                                <span id="r_file11"></span>
+                            </p>
+                            <p><strong>Degree Marks Card:</strong>
+                                <span id="r_file12"></span>
+                            </p>
+                            <p><strong>Adhar Card:</strong>
+                                <span id="r_file13"></span>
+                            </p>
+                            <p><strong>Transfer Certificate:</strong>
+                                <span id="r_file14"></span>
+                            </p>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn back-btn" onclick="back()">← Edit</button>
+
+                            <button type="button" class="btn submit-btn" onclick="finalSubmit()">
+                                Confirm & Submit
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- SUCCESS MESSAGE -->
+                <div class="success-box" id="successBox">
+                    <div class="success-icon">✔</div>
+                    <h2>Congratulations!</h2>
+                    <p>Your application has been submitted successfully.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="page">
+            <div class="hero">
+                <h1>FAQs</h1>
+            </div>
+
+            <details>
+                <summary>Is entrance exam required?</summary>
+                <p>Entrance exams are required for B.Tech, MCA, and MBA programs as per university norms.</p>
+            </details>
+
+            <details>
+                <summary>Are scholarships available?</summary>
+                <p>Yes. SSP, NSP, Merit-based, and Government scholarships are available for eligible students.</p>
+            </details>
+
+            <details>
+                <summary>Is hostel facility available?</summary>
+                <p>Yes. Separate and secure hostel facilities are available for boys and girls.</p>
+            </details>
+
+            <details>
+                <summary>What documents are required for admission?</summary>
+                <p>10th & 12th marks cards, degree marks card (for PG), Aadhaar card, transfer certificate, and
+                    passport-size photos.</p>
+            </details>
+
+            <details>
+                <summary>Can I apply online?</summary>
+                <p>Yes. You can complete the entire admission enquiry process online through this portal.</p>
+            </details>
+
+            <details>
+                <summary>Is management quota available?</summary>
+                <p>Yes. Limited management quota seats are available as per university guidelines.</p>
+            </details>
+
+            <details>
+                <summary>What is the admission process?</summary>
+                <p>Apply online → Document verification → Counselling → Fee payment → Admission confirmation.</p>
+            </details>
+
+            <details>
+                <summary>Are placements provided?</summary>
+                <p>Yes. GM University provides strong placement support with training and industry tie-ups.</p>
+            </details>
+
+            <details>
+                <summary>Is transport facility available?</summary>
+                <p>Yes. University transport is available from major locations in and around Davangere.</p>
+            </details>
+
+            <details>
+                <summary>Who can I contact for admission help?</summary>
+                <p>You can call 8192233345 or email info@gmu.ac.in for admission-related assistance.</p>
+            </details>
+        </div>
+
+        <!-- CONTACT -->
+        <div id="contact" class="page">
+            <div class="hero">
+                <h1>Contact Us</h1>
+            </div>
+            <div class="card">
+                <p>GM University, Davangere</p>
+                <p>📞 8192233345</p>
+                <p>✉ info@gmu.ac.in</p>
+            </div>
+        </div>
+
+        <!-- DEMO CODE MODAL POPUP -->
+        <div id="demoCodeModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeDemoModal()">&times;</span>
+                <div class="modal-header">
+                    <h2 id="modalTitle">Verification Code</h2>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                    <div class="code-box">
+                        <span id="demoCode" class="code-display">000000</span>
+                        <button class="btn-copy" onclick="copyDemoCode()">📋 Copy Code</button>
+                    </div>
+                    <p class="modal-note">⚠️ This is a demo. In production, codes are sent via email/SMS.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn next-btn" onclick="closeDemoModal()">Got it, I'll enter the code</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-container">
+
+                <!-- LOGO -->
+                <div class="footer-logo">
+                    <img src="logooo.jpg" alt="GMIT Logo">
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="footer-address">
+                    <p><strong>P.BOX No.4</strong></p>
+                    <p>P B Road, Davangere – 577006</p>
+                    <p>Email: <a href="mailto:info@gmit.ac.in">info@gmit.ac.in</a></p>
+                    <p>Call Us:</p>
+                    <p>08192-296035</p>
+                    <p>08192-233345, 233377, 252777</p>
+                </div>
+
+                <!-- LINKS -->
+                <div class="footer-links">
+                    <a href="#">Careers at GMIT</a>
+                    <a href="#">Event Spaces</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+
+                <div class="footer-links">
+                    <a href="#">Faculty & Staff</a>
+                    <a href="#">Accreditation</a>
+                    <a href="#">Visit GMIT</a>
+                </div>
+
+            </div>
+
+            <!-- COPYRIGHT BAR -->
+            <div class="footer-bottom">
+                © 2026 GM University Davangere | BMS | Admission Portal
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
