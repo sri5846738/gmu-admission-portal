@@ -243,50 +243,8 @@ function searchPrograms() {
 /* ==================================================
    EMAIL VERIFICATION
 ================================================== */
-let verificationCodeGenerated = "";
-
-function sendVerificationCode() {
-    const email = document.getElementById("verifyEmail").value;
-    
-    if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
-        alert("Please enter a valid email address");
-        return;
-    }
-    
-    // Generate random 6-digit code
-    verificationCodeGenerated = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Simulate sending email (in real app, use backend)
-    console.log("Verification code sent to " + email + ": " + verificationCodeGenerated);
-    alert("Verification code sent to " + email + "\n\n(Demo: " + verificationCodeGenerated + ")");
-    
-    document.getElementById("verificationForm").style.display = "none";
-    document.getElementById("codeVerificationForm").style.display = "block";
-}
-
-function verifyCode() {
-    const enteredCode = document.getElementById("verificationCode").value;
-    
-    if (enteredCode.length !== 6 || !/^[0-9]{6}$/.test(enteredCode)) {
-        alert("Please enter a valid 6-digit code");
-        return;
-    }
-    
-    if (enteredCode === verificationCodeGenerated) {
-        document.getElementById("codeVerificationForm").style.display = "none";
-        document.getElementById("verificationSuccess").style.display = "block";
-    } else {
-        alert("Incorrect code. Please try again.");
-    }
-}
-
-function resetVerification() {
-    document.getElementById("verifyEmail").value = "";
-    document.getElementById("verificationCode").value = "";
-    document.getElementById("verificationForm").style.display = "block";
-    document.getElementById("codeVerificationForm").style.display = "none";
-    document.getElementById("verificationSuccess").style.display = "none";
-}
+// Email verification is now handled server-side
+// Removed dummy verification code
 
 /* ==================================================
    EMAIL & PHONE VERIFICATION IN APPLICATION FORM
@@ -378,25 +336,7 @@ function confirmPhoneCode() {
 }
 
 function nextWithVerification() {
-    const email = document.getElementById("formEmail").value;
-    const phone = document.getElementById("formMobile").value;
-    
-    if (!email || !phone) {
-        alert("Please enter both email and phone number");
-        return;
-    }
-    
-    if (!emailVerified) {
-        alert("Please verify your email first");
-        return;
-    }
-    
-    if (!phoneVerified) {
-        alert("Please verify your phone number first");
-        return;
-    }
-    
-    // Both verified - proceed to next step
+    // Auto-verified - skip manual checks and proceed
     next();
 }
 
@@ -413,26 +353,6 @@ function showDemoModal(title, message, code) {
 function closeDemoModal() {
     document.getElementById("demoCodeModal").classList.remove("show");
 }
-
-function copyDemoCode() {
-    const code = document.getElementById("demoCode").textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        const btn = document.querySelector(".btn-copy");
-        const originalText = btn.textContent;
-        btn.textContent = "✓ Copied!";
-        setTimeout(() => {
-            btn.textContent = originalText;
-        }, 2000);
-    });
-}
-
-// Close modal when clicking outside
-window.addEventListener("click", function(event) {
-    const modal = document.getElementById("demoCodeModal");
-    if (event.target === modal) {
-        closeDemoModal();
-    }
-});
 
 /* ==================================================
    GOOGLE OAUTH2 FUNCTIONS
