@@ -101,7 +101,10 @@ function fillReview() {
    FINAL SUBMIT - SEND TO BACKEND
 ================================================== */
 // Backend API URL - Update this based on your deployment
-const BACKEND_URL = 'http://localhost:3000/api'; // Change to your production backend URL
+// Detect environment and set backend URL
+const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : 'https://gmu-admission-backend.onrender.com/api';  // Production backend URL
 
 async function finalSubmit() {
     // Show loading state
@@ -147,9 +150,19 @@ async function finalSubmit() {
             presentAddress: getFieldValue("presentAddress"),
             permanentAddress: getFieldValue("permanentAddress"),
             
-            // Verification status
+            // Documents - capture file names from file inputs
+            documents: {
+                file10: document.getElementById("file10")?.files[0]?.name || null,
+                file11: document.getElementById("file11")?.files[0]?.name || null,
+                file12: document.getElementById("file12")?.files[0]?.name || null,
+                file13: document.getElementById("file13")?.files[0]?.name || null,
+                file14: document.getElementById("file14")?.files[0]?.name || null
+            },
+            
+            // Verification status & Google OAuth
             emailVerified: window.emailVerified || false,
-            phoneVerified: window.phoneVerified || false
+            phoneVerified: window.phoneVerified || false,
+            googleEmail: window.googleEmail || null  // Email from Google OAuth
         };
 
         // Validate all required fields

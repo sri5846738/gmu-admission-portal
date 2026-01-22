@@ -52,6 +52,7 @@ const applicationSchema = new mongoose.Schema({
     mobile: { type: String, required: true },
     emailVerified: { type: Boolean, default: false },
     phoneVerified: { type: Boolean, default: false },
+    googleEmail: { type: String, default: null },  // Email from Google OAuth
     
     // Step 2: Parent & Course Details
     fatherName: { type: String, required: true },
@@ -63,7 +64,7 @@ const applicationSchema = new mongoose.Schema({
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
     documents: {
-        file10: String,
+        file10: String,  // File path
         file11: String,
         file12: String,
         file13: String,
@@ -104,13 +105,14 @@ app.post('/api/applications/submit', async (req, res) => {
             mobile: formData.mobile,
             emailVerified: emailVerified,
             phoneVerified: phoneVerified,
+            googleEmail: formData.googleEmail || null,  // Store Google OAuth email
             fatherName: formData.fatherName,
             motherName: formData.motherName,
             programType: formData.programType,
             selectedCourse: formData.selectedCourse,
             presentAddress: formData.presentAddress,
             permanentAddress: formData.permanentAddress,
-            documents: formData.documents || {}
+            documents: formData.documents || {}  // Store file paths from frontend
         });
         
         await application.save();
