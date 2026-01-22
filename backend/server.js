@@ -76,7 +76,7 @@ const applicationSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now }
 });
 
-const Application = mongoose.model('Application', applicationSchema);
+const Application = mongoose.model('Application', applicationSchema, 'sri18');
 
 // Routes
 
@@ -93,13 +93,17 @@ app.post('/api/applications/submit', async (req, res) => {
             });
         }
         
+        // Convert verification fields to boolean properly
+        const emailVerified = formData.emailVerified === true || formData.emailVerified === 'true' || false;
+        const phoneVerified = formData.phoneVerified === true || formData.phoneVerified === 'true' || false;
+        
         // Create new application
         const application = new Application({
             studentName: formData.studentName,
             email: formData.email,
             mobile: formData.mobile,
-            emailVerified: formData.emailVerified || false,
-            phoneVerified: formData.phoneVerified || false,
+            emailVerified: emailVerified,
+            phoneVerified: phoneVerified,
             fatherName: formData.fatherName,
             motherName: formData.motherName,
             programType: formData.programType,

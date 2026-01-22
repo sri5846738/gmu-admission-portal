@@ -112,27 +112,53 @@ async function finalSubmit() {
     }
 
     try {
+        // Helper function to get form values by name
+        const getFieldValue = (fieldName) => {
+            const field = form.querySelector(`[name="${fieldName}"]`);
+            return field ? field.value : "";
+        };
+
+        // Get course based on program type
+        let selectedCourse = "";
+        const programType = getFieldValue("programType");
+        if (programType === "UG") {
+            selectedCourse = getFieldValue("ugCourse");
+        } else if (programType === "PG") {
+            selectedCourse = getFieldValue("pgCourse");
+        }
+
         // Collect all form data
+        const email = document.getElementById("formEmail")?.value || "";
+        const mobile = document.getElementById("formMobile")?.value || "";
+        
         const formData = {
             // Step 1: Student Details
-            studentName: document.getElementById("studentName").value,
-            email: document.getElementById("email").value,
-            mobile: document.getElementById("mobile").value,
+            studentName: getFieldValue("studentName"),
+            email: email,
+            mobile: mobile,
             
             // Step 2: Parent Details & Course
-            fatherName: document.getElementById("fatherName").value,
-            motherName: document.getElementById("motherName").value,
-            programType: document.getElementById("programType").value,
-            selectedCourse: document.getElementById("selectedCourse").value,
+            fatherName: getFieldValue("fatherName"),
+            motherName: getFieldValue("motherName"),
+            programType: programType,
+            selectedCourse: selectedCourse,
             
             // Step 3: Address
-            presentAddress: document.getElementById("presentAddress").value,
-            permanentAddress: document.getElementById("permanentAddress").value,
+            presentAddress: getFieldValue("presentAddress"),
+            permanentAddress: getFieldValue("permanentAddress"),
             
             // Verification status
             emailVerified: window.emailVerified || false,
             phoneVerified: window.phoneVerified || false
         };
+
+        // Validate all required fields
+        const requiredFields = ['studentName', 'email', 'mobile', 'fatherName', 'motherName', 'programType', 'selectedCourse', 'presentAddress', 'permanentAddress'];
+        const missingFields = requiredFields.filter(field => !formData[field] || formData[field].trim() === '');
+        
+        if (missingFields.length > 0) {
+            throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+        }
 
         // Send to backend
         const response = await fetch(`${BACKEND_URL}/applications/submit`, {
@@ -167,7 +193,7 @@ async function finalSubmit() {
         }
     } catch (error) {
         console.error('Submission error:', error);
-        alert(`❌ Submission Failed:\n\n${error.message}\n\nPlease check your internet connection and try again.`);
+        alert(`❌ Submission Failed:\n\n${error.message}\n\nPlease check all fields are filled and try again.`);
         
         // Re-enable submit button
         if (submitBtn) {
