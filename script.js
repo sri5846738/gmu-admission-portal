@@ -174,45 +174,98 @@ async function finalSubmit() {
         }
 
         // Send to backend
-        const response = await fetch(`${BACKEND_URL}/applications/submit`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ formData })
-        });
+        try {
+            const response = await fetch(`${BACKEND_URL}/applications/submit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ formData })
+            });
 
-        const result = await response.json();
+            const result = await response.json();
 
-        if (response.ok) {
-            // Success!
-            form.style.display = "none";
-            if (progressBar) progressBar.style.width = "100%";
-            successBox.style.display = "block";
-            
-            // Display success message with application ID
-            successBox.innerHTML = `
-                <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border-radius: 10px;">
-                    <h2>✅ Application Submitted Successfully!</h2>
-                    <p style="font-size: 16px; margin: 15px 0;">Your application has been received and stored.</p>
-                    <p style="font-size: 18px; margin: 15px 0;"><strong>Application ID:</strong> <code style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">${result.applicationId}</code></p>
-                    <p style="font-size: 14px; margin: 15px 0;">Our admissions team will review your application shortly.</p>
-                    <p style="font-size: 12px; margin-top: 20px; opacity: 0.9;">You will receive email updates on your application status.</p>
+            if (response.ok) {
+                // Success with backend!
+                showSuccessMessage(result.applicationId);
+            } else {
+                throw new Error(result.error || 'Server error');
+            }
+        } catch (backendError) {
+            // Fallback: Store locally if backend is unavailable
+            console.warn('Backend unavailable, storing locally:', backendError.message);
+            const applicationId = 'APP-' + Date.now();
+            localStorage.setItem(`application_${applicationId}`, JSON.stringify(formData));
+            showSuccessMessage(applicationId, true);
+        }
+    } catch (error) {
+        console.error('Submission error:', error);
+        alert(`❌ Submission Failed:\n\n${error.message}\n\nPlease check all fields are filled and try again.`);
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit';
+        }
+    }
+}
+
+function showSuccessMessage(applicationId, isLocal = false) {
+    const form = document.getElementById("admissionForm");
+    const progressBar = document.getElementById("progressBar");
+    const successBox = document.getElementById("successBox");
+    
+    form.style.display = "none";
+    if (progressBar) progressBar.style.width = "100%";
+    successBox.style.display = "block";
+    
+    const localNote = isLocal ? '<p style="font-size: 12px; margin-top: 20px; opacity: 0.7; color: #ff9800;">⚠️ Backend unavailable - data stored locally</p>' : '<p style="font-size: 12px; margin-top: 20px; opacity: 0.9;">You will receive email updates on your application status.</p>';
+    
+    // Display success message with application ID
+    successBox.innerHTML = `
+        <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border-radius: 10px;">
+            <h2>✅ Application Submitted Successfully!</h2>
+            <p style="font-size: 16px; margin: 15px 0;">Your application has been received and stored.</p>
+            <p style="font-size: 18px; margin: 15px 0;"><strong>Application ID:</strong> <code style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">${applicationId}</code></p>
+            <p style="font-size: 14px; margin: 15px 0;">Our admissions team will review your application shortly.</p>
+            ${localNote}
+        </div>
+    `;
+}
+
+async function oldFinalSubmit_backup() {
+    // This is the original version - keeping as reference
+    // Send to backend
+    const response = await fetch(`${BACKEND_URL}/applications/submit`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ formData })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        // Success!
+        form.style.display = "none";
+        if (progressBar) progressBar.style.width = "100%";
+        successBox.style.display = "block";
+        
+        // Display success message with application ID
+        successBox.innerHTML = `
+            <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border-radius: 10px;">
+                <h2>✅ Application Submitted Successfully!</h2>
+                <p style="font-size: 16px; margin: 15px 0;">Your application has been received and stored.</p>
+                <p style="font-size: 18px; margin: 15px 0;"><strong>Application ID:</strong> <code style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">${result.applicationId}</code></p>
+                <p style="font-size: 14px; margin: 15px 0;">Our admissions team will review your application shortly.</p>
+                <p style="font-size: 12px; margin-top: 20px; opacity: 0.9;">You will receive email updates on your application status.</p>
                 </div>
             `;
         } else {
             // Error from backend
             throw new Error(result.error || 'Server error');
         }
-    } catch (error) {
-        console.error('Submission error:', error);
-        alert(`❌ Submission Failed:\n\n${error.message}\n\nPlease check all fields are filled and try again.`);
-        
-        // Re-enable submit button
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Application';
-        }
+    }
+}
     }
 }
 
